@@ -14,32 +14,33 @@ EOF
 mkdir -p ${output}
 # run bt step1
 
+
 ## run step1 for Prot 
 ## As 2911 is too large, split into several part
 
-# for chunk in {2..6};do  # totally 16; first run 6; then 7..11; finaly 11..16 
-#     protChunkOutPutDir=${output}/Prot_part${chunk}
-#     mkdir -p ${protChunkOutPutDir}
-#     sbatch -J "Prot${chunk}_step1" -c 20 --mem=20G -o step1_Prot_${chunk}.log --wrap """
-#     regenie \
-#         --step 1 \
-#         --threads ${threads} \
-#         --bed ${hardCallPath} \
-#         --extract /pmaster/xutingfeng/dataset/ukb/dataset/snp/geneArray/qc_pass.snplist \
-#         --keep /pmaster/xutingfeng/dataset/ukb/dataset/snp/geneArray/qc_pass.id \
-#         --keep /pmaster/xutingfeng/dataset/ukb/phenotype/white.tsv \
-#         --qt \
-#         --phenoFile ${PhenoPath}/Prot_part${chunk}.regenie \
-#         --covarFile /pmaster/xutingfeng/dataset/ukb/phenotype/regenie.cov \
-#         --covarColList genotype_array,inferred_sex,age_visit,PC1,PC2,PC3,PC4,PC5,PC6,PC7,PC8,PC9,PC10,assessment_center,age_squared \
-#         --catCovarList	genotype_array,inferred_sex,assessment_center \
-#         --maxCatLevels 30 \
-#         --bsize 1000 \
-#         --lowmem \
-#         --lowmem-prefix /hwmaster/xutingfeng/Prot_part${chunk} \
-#         --out ${protChunkOutPutDir}
-#         """
-# done 
+for chunk in {2..6};do  # totally 16; first run 6; then 7..11; finaly 11..16 
+    protChunkOutPutDir=${output}/Prot_part${chunk}
+    mkdir -p ${protChunkOutPutDir}
+    sbatch -J "Prot${chunk}_step1" -c 20 --mem=20G -o step1_Prot_${chunk}.log --wrap """
+    regenie \
+        --step 1 \
+        --threads ${threads} \
+        --bed ${hardCallPath} \
+        --extract /pmaster/xutingfeng/dataset/ukb/dataset/snp/geneArray/qc_pass.snplist \
+        --keep /pmaster/xutingfeng/dataset/ukb/dataset/snp/geneArray/qc_pass.id \
+        --keep /pmaster/xutingfeng/dataset/ukb/phenotype/white.tsv \
+        --qt \
+        --phenoFile ${PhenoPath}/Prot_part${chunk}.regenie \
+        --covarFile /pmaster/xutingfeng/dataset/ukb/phenotype/regenie.cov \
+        --covarColList genotype_array,inferred_sex,age_visit,PC1,PC2,PC3,PC4,PC5,PC6,PC7,PC8,PC9,PC10,assessment_center,age_squared \
+        --catCovarList	genotype_array,inferred_sex,assessment_center \
+        --maxCatLevels 30 \
+        --bsize 1000 \
+        --lowmem \
+        --lowmem-prefix /hwmaster/xutingfeng/tmp_Prot_part${chunk} \
+        --out ${protChunkOutPutDir}/Prot_part${chunk}
+        """
+done 
 ## Step1 for NMR 
 for chunk in {2..2};do # totally 2
     nmrChunkOutPutDir=${output}/NMR_part${chunk}
@@ -60,8 +61,8 @@ for chunk in {2..2};do # totally 2
         --maxCatLevels 30 \
         --bsize 1000 \
         --lowmem \
-        --lowmem-prefix /hwmaster/xutingfeng/NMR_part${chunk} \
-        --out ${nmrChunkOutPutDir}
+        --lowmem-prefix /hwmaster/xutingfeng/tmp_NMR_part${chunk} \
+        --out ${nmrChunkOutPutDir}/NMR_part${chunk}
         """
 done 
 ## Step1 for RF
@@ -84,10 +85,10 @@ done
 #     --out ${output}/bloodAssayAndBasicCharacteristics/
 #     """
 
-# Step1 for Disease 
+# # Step1 for Disease 
 mkdir -p ${output}/MainDiseasePheno
 sbatch -J "MainDiseasePheno_step1" -c ${threads} --mem=25G -o step1_MainDiseasePheno.log \
-    --wrap "
+    --wrap """
 regenie \
     --step 1 \
     --threads ${threads} \
@@ -106,4 +107,4 @@ regenie \
     --pThresh 0.01 \
     --bsize 1000 \
     --out ${output}/MainDiseasePheno
-    "
+    """

@@ -10,43 +10,42 @@ covarFile=/pmaster/xutingfeng/dataset/ukb/phenotype/regenie.cov
 
 threads=5
 
-# # Run Disease 
-# step1=/pmaster/xutingfeng/dataset/ukb/dataset/regenie/sex_diff/step1/MainDiseasePheno/_pred.list
-# DiseaseOutputPath=${outputPath}/Disease
-# phenoFile=/pmaster/xutingfeng/dataset/ukb/dataset/regenie/sex_diff/disease.regenie
-# logfile=/pmaster/xutingfeng/dataset/ukb/dataset/regenie/sex_diff/log/Burden/disease/
+# Run Disease 
+step1=/pmaster/xutingfeng/dataset/ukb/dataset/regenie/sex_diff/step1/MainDiseasePheno/pred.list
+DiseaseOutputPath=${outputPath}/Disease
+phenoFile=/pmaster/xutingfeng/dataset/ukb/dataset/regenie/sex_diff/MainDiseasePheno.regenie
+logfile=/pmaster/xutingfeng/dataset/ukb/dataset/regenie/sex_diff/log/GWASV2/disease/
 
-# mkdir -p ${logfile}
+mkdir -p ${logfile}
 
 
-# for sex in female male; do
-#     keep_files=/pmaster/xutingfeng/dataset/ukb/dataset/regenie/sex_diff/white_train_${sex}.tsv
-#     c_outputPath=${DiseaseOutputPath}/${sex}
-#     mkdir -p ${c_outputPath}
+for sex in female male; do
+    keep_files=/pmaster/xutingfeng/dataset/ukb/dataset/regenie/sex_diff/white_train_${sex}.tsv
+    c_outputPath=${DiseaseOutputPath}/${sex}
+    mkdir -p ${c_outputPath}
 
-#     for chr in {1..22}; do  # 22
+    for chr in {1..22}; do  # 22
 
-#         sbatch -J "${sex}_chr${chr}" -c ${threads} --mem=${memory} -o ${logfile}/${sex}_chr${chr}_gwas.log --wrap """
-#         regenie --step 2 \
-#         --threads=${threads} \
-#         --ref-first \
-#         --pgen ${chrDir}/ukb_imp_chr${chr}_v3_hg37_qc\
-#         --phenoFile ${phenoFile} \
-#         --keep ${keep_files} \
-#          --bt \
-#         --covarFile ${covarFile} \
-#         --covarColList genotype_array,age_visit,PC1,PC2,PC3,PC4,PC5,PC6,PC7,PC8,PC9,PC10,assessment_center,age_squared \
-#         --catCovarList genotype_array,assessment_center \
-#         --maxCatLevels 30 \
-#         --bsize 1000 \
-#         --out ${c_outputPath}/chr${chr} \
-#         --minMAC 10 \
-#        --firth \
-#         --approx \
-#         --pThresh 0.01 \
-#         --pred ${step1}"""
-#     done
-# done
+        sbatch -J "${sex}_chr${chr}" -c ${threads} --mem=${memory} -o ${logfile}/${sex}_chr${chr}_gwas.log --wrap """
+        regenie --step 2 \
+        --threads=${threads} \
+        --pgen ${chrDir}/ukb_imp_chr${chr}_v3_hg37_qc\
+        --phenoFile ${phenoFile} \
+        --keep ${keep_files} \
+         --bt \
+        --covarFile ${covarFile} \
+        --covarColList genotype_array,age_visit,PC1,PC2,PC3,PC4,PC5,PC6,PC7,PC8,PC9,PC10,assessment_center,age_squared \
+        --catCovarList genotype_array,assessment_center \
+        --maxCatLevels 30 \
+        --bsize 1000 \
+        --out ${c_outputPath}/chr${chr} \
+        --minMAC 10 \
+       --firth \
+        --approx \
+        --pThresh 0.01 \
+        --pred ${step1}"""
+    done
+done
 
 
 
@@ -68,7 +67,6 @@ threads=5
 #     echo sbatch -J "${sex}_chr${chr}" -c ${threads} --mem=${memory} -o ${logfile}/${sex}_chr${chr}_gwas.log --wrap """
 #         regenie --step 2 \
 #         --threads=${threads} \
-#         --ref-first \
 #         --pgen ${chrDir}/ukb_imp_chr${chr}_v3_hg37_qc\
 #         --phenoFile ${phenoFile} \
 #         --keep ${keep_files} \
@@ -85,12 +83,12 @@ threads=5
 # done
 
 
-# ## Run NMR 
+## Run NMR 
 
-# step1=/pmaster/xutingfeng/dataset/ukb/dataset/regenie/sex_diff/step1/NMR/_pred.list
+# step1=/pmaster/xutingfeng/dataset/ukb/dataset/regenie/sex_diff/step1/NMR/pred.list
 # NMROutputPath=${outputPath}/NMR
 # phenoFile=/pmaster/xutingfeng/dataset/ukb/dataset/regenie/sex_diff/NMR.regenie
-# logfile=/pmaster/xutingfeng/dataset/ukb/dataset/regenie/sex_diff/log/GWAS/NMR/
+# logfile=/pmaster/xutingfeng/dataset/ukb/dataset/regenie/sex_diff/log/GWASV2/NMR/
 
 # mkdir -p ${logfile}
 # for sex in female male; do
@@ -103,7 +101,6 @@ threads=5
 #     sbatch -J "${sex}_chr${chr}" -c ${threads} --mem=${memory} -o ${logfile}/${sex}_chr${chr}_gwas.log --wrap """
 #         regenie --step 2 \
 #         --threads=${threads} \
-#         --ref-first \
 #         --pgen ${chrDir}/ukb_imp_chr${chr}_v3_hg37_qc\
 #         --phenoFile ${phenoFile} \
 #         --keep ${keep_files} \
@@ -119,39 +116,38 @@ threads=5
 #     done
 # done
 
-## Run RF 
+## Run bloodAssayAndBasicCharacteristics 
 
-step1=/pmaster/xutingfeng/dataset/ukb/dataset/regenie/sex_diff/step1/bloodAssayAndBasicCharacteristics/_pred.list
-RFOutputPath=${outputPath}/bloodAssayAndBasicCharacteristics
-phenoFile=/pmaster/xutingfeng/dataset/ukb/dataset/regenie/sex_diff/bloodAssayAndBasicCharacteristics.regenie
-logfile=/pmaster/xutingfeng/dataset/ukb/dataset/regenie/sex_diff/log/GWASV2/bloodAssayAndBasicCharacteristics/
+# step1=/pmaster/xutingfeng/dataset/ukb/dataset/regenie/sex_diff/step1/bloodAssayAndBasicCharacteristics/pred.list
+# RFOutputPath=${outputPath}/bloodAssayAndBasicCharacteristics
+# phenoFile=/pmaster/xutingfeng/dataset/ukb/dataset/regenie/sex_diff/bloodAssayAndBasicCharacteristics.regenie
+# logfile=/pmaster/xutingfeng/dataset/ukb/dataset/regenie/sex_diff/log/GWASV2/bloodAssayAndBasicCharacteristics/
 
-mkdir -p ${logfile}
-for sex in female male; do
-    keep_files=/pmaster/xutingfeng/dataset/ukb/dataset/regenie/sex_diff/white_train_${sex}.tsv
-    c_outputPath=${RFOutputPath}/${sex}
-    mkdir -p ${c_outputPath}
+# mkdir -p ${logfile}
+# for sex in female male; do
+#     keep_files=/pmaster/xutingfeng/dataset/ukb/dataset/regenie/sex_diff/white_train_${sex}.tsv
+#     c_outputPath=${RFOutputPath}/${sex}
+#     mkdir -p ${c_outputPath}
 
-    for chr in {1..22}; do  # 22
-
-    sbatch -J "${sex}_chr${chr}" -c ${threads} --mem=${memory} -o ${logfile}/${sex}_chr${chr}_gwas.log --wrap """
-        regenie --step 2 \
-        --threads=${threads} \
-        --ref-first \
-        --pgen ${chrDir}/ukb_imp_chr${chr}_v3_hg37_qc\
-        --phenoFile ${phenoFile} \
-        --keep ${keep_files} \
-         --qt \
-        --covarFile ${covarFile} \
-        --covarColList genotype_array,age_visit,PC1,PC2,PC3,PC4,PC5,PC6,PC7,PC8,PC9,PC10,assessment_center,age_squared \
-        --catCovarList genotype_array,assessment_center \
-        --maxCatLevels 30 \
-        --bsize 1000 \
-        --out ${c_outputPath}/chr${chr} \
-        --minMAC 10 \
-        --pred ${step1}"""
-    done
-done
+#     for chr in {1..22}; do  # 22
+    
+#     sbatch -J "${sex}_chr${chr}" -c ${threads} --mem=${memory} -o ${logfile}/${sex}_chr${chr}_gwas.log --wrap """
+#         regenie --step 2 \
+#         --threads=${threads} \
+#         --pgen ${chrDir}/ukb_imp_chr${chr}_v3_hg37_qc\
+#         --phenoFile ${phenoFile} \
+#         --keep ${keep_files} \
+#          --qt \
+#         --covarFile ${covarFile} \
+#         --covarColList genotype_array,age_visit,PC1,PC2,PC3,PC4,PC5,PC6,PC7,PC8,PC9,PC10,assessment_center,age_squared \
+#         --catCovarList genotype_array,assessment_center \
+#         --maxCatLevels 30 \
+#         --bsize 1000 \
+#         --out ${c_outputPath}/chr${chr} \
+#         --minMAC 10 \
+#         --pred ${step1}"""
+#     done
+# done
 
 
 
