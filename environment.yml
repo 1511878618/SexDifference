@@ -1,0 +1,12 @@
+name: gwaslab
+channels:
+  - r
+  - bioconda
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.9.19
+  - gwaslab==3.5.5
+  - seaborn
+  - pyarrow
+prefix: /deeplearning/xutingfeng/miniforge3/envs/gwaslab
